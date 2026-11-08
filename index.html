@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#06121a">
+    <meta name="description" content="RADAR 竞赛中枢 —— 把报名、备赛与参赛收进同一条时间线。">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b5a5f'/%3E%3Cpath d='M7 20c4-7 14-7 18 0M11 20c2.4-4 7.6-4 10 0' stroke='%237fd3c9' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+    <title>RADAR 竞赛中枢 · 校园竞赛信息平台</title>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+    <!-- 首屏大图与 .hero 的 --img-hero 保持一致，避免首屏出现空白色块 -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=2000&q=80">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+</head>
+<body>
+    <a class="skip-link" href="#main">跳到主要内容</a>
+    <div class="ambient" aria-hidden="true"><span class="ambient-a"></span><span class="ambient-b"></span></div>
+
+    <div class="app-shell" id="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-top">
+                <button class="brand" type="button" data-page="page-home">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 32 32">
+                            <path d="M6 21c4-7 16-7 20 0"/>
+                            <path d="M10 21c2.4-4 9.6-4 12 0"/>
+                            <path d="M16 21v2.5"/>
+                            <circle cx="16" cy="21" r="1.4"/>
+                        </svg>
+                    </span>
+                    <span class="brand-text">
+                        <strong>RADAR</strong>
+                        <em>竞赛中枢</em>
+                    </span>
+                </button>
+                <button class="nav-close" id="nav-close" type="button" aria-label="关闭导航">
+                    <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+                </button>
+            </div>
+
+            <nav class="nav-section" aria-label="浏览">
+                <p class="nav-label">浏览</p>
+                <button class="route-btn active" type="button" data-page="page-home">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z"/><path d="M10 20v-6h4v6"/></svg></span>
+                    <span class="route-text">总览</span>
+                    <span class="route-count" id="nav-count-all">84</span>
+                </button>
+                <button class="route-btn" type="button" data-page="page-library">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h14M5 17h9"/></svg></span>
+                    <span class="route-text">比赛库</span>
+                </button>
+                <button class="route-btn" type="button" data-page="page-calendar">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></span>
+                    <span class="route-text">日历</span>
+                </button>
+                <button class="route-btn" type="button" data-page="page-guide">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="M6 4.5h11.5A1.5 1.5 0 0 1 19 6v14H7.5A2.5 2.5 0 0 0 5 22.5V6A1.5 1.5 0 0 1 6.5 4.5z"/><path d="M8 9h7M8 13h7"/></svg></span>
+                    <span class="route-text">备赛攻略</span>
+                </button>
+                <button class="route-btn" type="button" data-page="page-awards">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="M8 4h8v6a4 4 0 0 1-8 0z"/><path d="M8 6H5.5A2.5 2.5 0 0 0 8 10M16 6h2.5A2.5 2.5 0 0 1 16 10M12 14v3M9 20h6"/></svg></span>
+                    <span class="route-text">获奖墙</span>
+                </button>
+            </nav>
+
+            <nav class="nav-section" aria-label="工作台">
+                <p class="nav-label">工作台</p>
+                <button class="route-btn" type="button" data-page="page-follow">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="m12 4 2.2 4.6 5 .7-3.6 3.5.9 5.1L12 15.8 7.5 17.9l.9-5.1L4.8 9.3l5-.7z"/></svg></span>
+                    <span class="route-text">我的关注</span>
+                    <span class="route-count" id="nav-count-follow">0</span>
+                </button>
+                <button class="route-btn" type="button" data-page="page-insight">
+                    <span class="route-ico"><svg viewBox="0 0 24 24"><path d="M5 19V10M12 19V5M19 19v-7"/></svg></span>
+                    <span class="route-text">数据洞察</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-tip">
+                <span class="tip-glow" aria-hidden="true"></span>
+                <p class="tip-kicker">备赛提示</p>
+                <p class="tip-text">把想打的比赛加进关注，赛程会自动出现在日历与数据洞察里。</p>
+                <button class="tip-btn" type="button" data-page="page-library">
+                    去挑选比赛
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+            </div>
+
+            <div class="user-card">
+                <span class="avatar" aria-hidden="true">林</span>
+                <span class="user-meta">
+                    <strong>林知夏</strong>
+                    <em>计算机学院 · 演示</em>
+                </span>
+                <button class="user-more" type="button" aria-label="账户设置">
+                    <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+            </div>
+        </aside>
+
+        <div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
+
+        <div class="workspace">
+            <header class="topbar">
+                <button class="nav-toggle" id="nav-toggle" type="button" aria-label="打开导航" aria-expanded="false" aria-controls="sidebar">
+                    <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </button>
+                <div class="top-title">
+                    <h1 id="page-title">总览</h1>
+                    <p id="page-date">正在读取日程</p>
+                </div>
+                <label class="search-box">
+                    <svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg>
+                    <input type="search" id="search-input" placeholder="搜索竞赛名称、主办方或关键词" autocomplete="off" aria-label="搜索竞赛">
+                    <kbd class="search-kbd">Ctrl K</kbd>
+                </label>
+                <div class="top-actions">
+                    <button class="icon-btn has-dot" id="bell-btn" type="button" aria-label="通知">
+                        <svg viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+                        <span class="dot" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn-primary" id="top-cta" type="button" data-target="page-library">
+                        <span id="top-cta-label">浏览比赛库</span>
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <main class="workspace-scroll" id="main">
+                <section id="page-home" class="page-view active home-page">
+                    <div class="hero">
+                        <div class="hero-copy">
+                            <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>2026 学年 · 学科竞赛目录</p>
+                            <h2>下一场比赛，<br><span>按你的节奏推进。</span></h2>
+                            <p class="hero-lead">报名窗口、比赛日和备赛要点收在同一条路线上。先看清赛程，再决定要不要押上这段时间。</p>
+                            <div class="hero-meta">
+                                <div class="hero-metric"><strong id="total-count">84</strong><span>项收录</span></div>
+                                <span class="hero-metric-div" aria-hidden="true"></span>
+                                <div class="hero-metric"><strong id="metric-open">0</strong><span>项跟进中</span></div>
+                                <span class="hero-metric-div" aria-hidden="true"></span>
+                                <div class="hero-metric"><strong id="metric-national">0</strong><span>项国家级</span></div>
+                            </div>
+                            <div class="hero-actions">
+                                <button class="btn-light" id="hero-browse" type="button">
+                                    进入比赛库
+                                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                                </button>
+                                <button class="btn-hero-ghost" id="hero-follow" type="button">查看我的关注</button>
+                            </div>
+                        </div>
+
+                        <article class="glass-float" id="spotlight-card" aria-live="polite">
+                            <div class="glass-head">
+                                <span class="glass-kicker">焦点赛事</span>
+                                <span class="glass-counter" id="spotlight-index">01 / 06</span>
+                            </div>
+                            <h3 id="spotlight-name">正在读取目录</h3>
+                            <p class="glass-host" id="spotlight-host">主办方</p>
+                            <div class="route-line">
+                                <span class="route-node"><em>报名窗口</em><strong id="spotlight-sign">—</strong></span>
+                                <i aria-hidden="true"><b></b></i>
+                                <span class="route-node"><em>比赛日</em><strong id="spotlight-comp">—</strong></span>
+                            </div>
+                            <div class="glass-foot">
+                                <span class="status-badge status-idle" id="spotlight-status">—</span>
+                                <div class="glass-nav">
+                                    <button class="ghost-icon" id="spotlight-prev" type="button" aria-label="上一场焦点赛事">
+                                        <svg viewBox="0 0 24 24"><path d="M14 6 8 12l6 6"/></svg>
+                                    </button>
+                                    <button class="ghost-icon" id="spotlight-next" type="button" aria-label="下一场焦点赛事">
+                                        <svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn-light glass-cta" id="spotlight-open" type="button">
+                                查看赛事详情
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </button>
+                        </article>
+                    </div>
+
+                    <div class="home-block">
+                        <div class="section-head">
+                            <div>
+                                <h2>三条值得提前布局的赛道</h2>
+                                <p>选一条赛道，直接进入对应的比赛库。</p>
+                            </div>
+                            <button class="text-link" id="home-all" type="button">
+                                查看全部赛事
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="track-grid">
+                            <button class="track-card" type="button" data-val="计算机">
+                                <span class="track-photo photo-code" aria-hidden="true"></span>
+                                <span class="track-count" data-count="计算机">— 场</span>
+                                <span class="track-arrow" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                                </span>
+                                <span class="track-meta">
+                                    <strong>计算机与算法</strong>
+                                    <em>程序设计、软件与信息技术</em>
+                                </span>
+                            </button>
+                            <button class="track-card" type="button" data-val="创新创业">
+                                <span class="track-photo photo-venture" aria-hidden="true"></span>
+                                <span class="track-count" data-count="创新创业">— 场</span>
+                                <span class="track-arrow" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                                </span>
+                                <span class="track-meta">
+                                    <strong>创新创业</strong>
+                                    <em>互联网+、挑战杯、三创赛</em>
+                                </span>
+                            </button>
+                            <button class="track-card" type="button" data-val="数学">
+                                <span class="track-photo photo-math" aria-hidden="true"></span>
+                                <span class="track-count" data-count="数学">— 场</span>
+                                <span class="track-arrow" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                                </span>
+                                <span class="track-meta">
+                                    <strong>数学建模</strong>
+                                    <em>国赛、美赛与统计建模</em>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="home-block">
+                        <div class="section-head">
+                            <div>
+                                <h2>正在跟进</h2>
+                                <p>已关注或标记参赛的赛事，点一行查看详情。</p>
+                            </div>
+                            <span class="section-badge" id="home-follow-count">0 场</span>
+                        </div>
+                        <div class="upcoming" id="home-upcoming"></div>
+                    </div>
+                </section>
+
+                <section id="page-library" class="page-view">
+                    <div class="stat-grid">
+                        <article class="stat-card stat-card--teal">
+                            <div class="stat-top">
+                                <span class="stat-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+                                </span>
+                                <span class="stat-chip" id="stat-total-chip">演示目录</span>
+                            </div>
+                            <p class="stat-label">全量收录</p>
+                            <strong class="stat-value" id="stat-total">—</strong>
+                            <span class="stat-note" id="stat-note">目录数据</span>
+                            <div class="spark" id="spark-total" aria-hidden="true"></div>
+                        </article>
+                        <article class="stat-card stat-card--green">
+                            <div class="stat-top">
+                                <span class="stat-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2 4 4 0 0 1 7 2c0 5.6-7 10-7 10z"/></svg>
+                                </span>
+                                <span class="stat-chip" id="stat-open-chip">—</span>
+                            </div>
+                            <p class="stat-label">正在跟进</p>
+                            <strong class="stat-value" id="stat-open">—</strong>
+                            <span class="stat-note">已关注或标记参赛</span>
+                            <div class="spark" id="spark-open" aria-hidden="true"></div>
+                        </article>
+                        <article class="stat-card stat-card--blue">
+                            <div class="stat-top">
+                                <span class="stat-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg>
+                                </span>
+                                <span class="stat-chip" id="stat-national-chip">—</span>
+                            </div>
+                            <p class="stat-label">国家级赛事</p>
+                            <strong class="stat-value" id="stat-national">—</strong>
+                            <span class="stat-note" id="stat-provincial">省级另计</span>
+                            <div class="spark" id="spark-national" aria-hidden="true"></div>
+                        </article>
+                        <article class="stat-card stat-card--amber">
+                            <div class="stat-top">
+                                <span class="stat-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24"><path d="M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7z"/><path d="m9 12 2 2 4-4"/></svg>
+                                </span>
+                                <span class="stat-chip" id="stat-provincial-chip">—</span>
+                            </div>
+                            <p class="stat-label">省级赛事</p>
+                            <strong class="stat-value" id="stat-provincial-value">—</strong>
+                            <span class="stat-note" id="stat-category-note">覆盖类别</span>
+                            <div class="spark" id="spark-provincial" aria-hidden="true"></div>
+                        </article>
+                    </div>
+
+                    <div class="panel filter-panel">
+                        <div class="filter-head">
+                            <span class="filter-title">
+                                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                                筛选
+                            </span>
+                            <span class="filter-hint" id="filter-hint">按类别、级别与月份收窄范围</span>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-label">类别</span>
+                            <div class="filter-options">
+                                <button class="filter-btn active" type="button" data-type="category" data-val="全部">全部</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="计算机">计算机</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="创新创业">创新创业</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="数学">数学</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="工程硬件">工程硬件</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="艺术设计">艺术设计</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="外语">外语</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="理科">理科</button>
+                                <button class="filter-btn" type="button" data-type="category" data-val="综合">综合</button>
+                            </div>
+                        </div>
+                        <div class="filter-row">
+                            <div class="filter-group">
+                                <span class="filter-label">级别</span>
+                                <div class="filter-options">
+                                    <button class="filter-btn active" type="button" data-type="level" data-val="全部">全部</button>
+                                    <button class="filter-btn" type="button" data-type="level" data-val="国家级">国家级</button>
+                                    <button class="filter-btn" type="button" data-type="level" data-val="省级">省级</button>
+                                    <button class="filter-btn" type="button" data-type="level" data-val="国际级">国际级</button>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <span class="filter-label">月份</span>
+                                <select id="filter-month" class="filter-select" aria-label="按月份筛选">
+                                    <option value="全部">全部</option>
+                                    <option value="1">1月</option><option value="2">2月</option><option value="3">3月</option>
+                                    <option value="4">4月</option><option value="5">5月</option><option value="6">6月</option>
+                                    <option value="7">7月</option><option value="8">8月</option><option value="9">9月</option>
+                                    <option value="10">10月</option><option value="11">11月</option><option value="12">12月</option>
+                                </select>
+                            </div>
+                            <button class="btn-ghost" id="filter-reset" type="button">清空筛选</button>
+                        </div>
+                    </div>
+
+                    <div class="panel table-panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>赛事名录</h2>
+                                <p id="result-count">正在整理目录</p>
+                            </div>
+                            <span class="live-dot"><i aria-hidden="true"></i>实时筛选</span>
+                        </div>
+                        <div class="table-scroll" role="table" aria-label="赛事名录">
+                            <div class="table-head" role="row">
+                                <span role="columnheader">竞赛名称</span>
+                                <span role="columnheader">主办方</span>
+                                <span role="columnheader">报名 / 比赛</span>
+                                <span role="columnheader">状态</span>
+                                <span role="columnheader">操作</span>
+                            </div>
+                            <div id="library-list" role="rowgroup"></div>
+                        </div>
+                        <div class="pager">
+                            <span class="pager-info" id="page-label">第 1 页</span>
+                            <div class="pager-actions">
+                                <button class="pager-btn" id="page-prev" type="button" aria-label="上一页">
+                                    <svg viewBox="0 0 24 24"><path d="M14 6 8 12l6 6"/></svg>
+                                </button>
+                                <div class="pager-pages" id="pager-pages"></div>
+                                <button class="pager-btn" id="page-next" type="button" aria-label="下一页">
+                                    <svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="page-calendar" class="page-view">
+                    <div class="split-2">
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2>月历</h2>
+                                    <p>源数据集中在 2024–2025 学年，月历会自动定位到有赛程的月份。</p>
+                                </div>
+                                <div class="cal-nav">
+                                    <button class="icon-btn icon-btn-sm" id="cal-prev" type="button" aria-label="上个月">
+                                        <svg viewBox="0 0 24 24"><path d="M14 6 8 12l6 6"/></svg>
+                                    </button>
+                                    <strong id="cal-label">2024年10月</strong>
+                                    <button class="icon-btn icon-btn-sm" id="cal-next" type="button" aria-label="下个月">
+                                        <svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cal-legend">
+                                <span><i class="lg-sign" aria-hidden="true"></i>报名窗口</span>
+                                <span><i class="lg-comp" aria-hidden="true"></i>比赛日</span>
+                                <span class="cal-legend-today"><i aria-hidden="true"></i>今天</span>
+                            </div>
+                            <div class="cal-weekdays">
+                                <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+                            </div>
+                            <div id="cal-grid" class="cal-grid"></div>
+                        </article>
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2>赛程时间轴</h2>
+                                    <p>按比赛日排列，点击打开详情。</p>
+                                </div>
+                            </div>
+                            <div id="timeline-list" class="timeline"></div>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="page-guide" class="page-view">
+                    <div class="guide-intro">
+                        <div>
+                            <p class="eyebrow eyebrow--ink"><span class="pulse" aria-hidden="true"></span>备赛路径</p>
+                            <h2>三场高频赛事，<br>三条可复用的准备路线。</h2>
+                        </div>
+                        <p>把「需要什么基础、准备多久、看什么书、哪里容易翻车」先写清楚，再把时间投进去。</p>
+                    </div>
+                    <div class="guide-grid">
+                        <article class="guide-card">
+                            <span class="guide-index">01</span>
+                            <h3>蓝桥杯全国软件大赛</h3>
+                            <p><strong>所需基础：</strong>掌握 C/C++ 或 Java 基础，了解基础数据结构。</p>
+                            <p><strong>准备周期：</strong>提前 3 个月刷真题。</p>
+                            <p><strong>书与课：</strong>《算法竞赛入门经典》 / B站真题精讲。</p>
+                            <p><strong>踩坑经验：</strong>不要盲目刷难题，基础题必须保证正确率。</p>
+                        </article>
+                        <article class="guide-card">
+                            <span class="guide-index">02</span>
+                            <h3>中国国际大学生创新大赛（互联网+）</h3>
+                            <p><strong>所需基础：</strong>具备一定的产品思维、PPT 制作能力，以及核心技术支持。</p>
+                            <p><strong>准备周期：</strong>提前半年组队，进行项目孵化。</p>
+                            <p><strong>书与课：</strong>《精益创业》 / 中国大学MOOC《创新创业基础》。</p>
+                            <p><strong>踩坑经验：</strong>商业计划书不能太空，一定要有实际落地数据，不能纯 PPT 创业。</p>
+                        </article>
+                        <article class="guide-card">
+                            <span class="guide-index">03</span>
+                            <h3>全国大学生数学建模竞赛</h3>
+                            <p><strong>所需基础：</strong>掌握一门编程语言（MATLAB/Python），熟悉一种排版工具（LaTeX/Word）。</p>
+                            <p><strong>准备周期：</strong>暑假期间进行为期 1-2 个月的集训。</p>
+                            <p><strong>书与课：</strong>《数学建模算法与应用》 / 推荐B站各类数模国奖经验分享。</p>
+                            <p><strong>踩坑经验：</strong>不要执着于完美模型，摘要写得好不好直接决定能不能拿国奖。</p>
+                        </article>
+                    </div>
+                </section>
+
+                <section id="page-awards" class="page-view">
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>学院历史获奖记录</h2>
+                                <p>演示条目，奖项、队员和来源都尚未核实。</p>
+                            </div>
+                            <span class="section-badge section-badge--light">演示数据</span>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="award-table">
+                                <thead>
+                                    <tr>
+                                        <th>年份</th>
+                                        <th>竞赛名称</th>
+                                        <th>奖项等级</th>
+                                        <th>参赛队员</th>
+                                        <th>数据来源</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2023</td>
+                                        <td>蓝桥杯省赛</td>
+                                        <td><span class="status-badge status-live">一等奖</span></td>
+                                        <td>未核实</td>
+                                        <td>未核实</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="page-follow" class="page-view">
+                    <article class="panel table-panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>已关注的赛事</h2>
+                                <p id="follow-count">只列出你点过「关注」的赛事。</p>
+                            </div>
+                            <button class="btn-ghost" type="button" data-page="page-library">去比赛库</button>
+                        </div>
+                        <div class="table-scroll" role="table" aria-label="我的关注">
+                            <div class="table-head" role="row">
+                                <span role="columnheader">竞赛名称</span>
+                                <span role="columnheader">主办方</span>
+                                <span role="columnheader">报名 / 比赛</span>
+                                <span role="columnheader">状态</span>
+                                <span role="columnheader">操作</span>
+                            </div>
+                            <div id="follow-list" role="rowgroup"></div>
+                        </div>
+                    </article>
+                </section>
+
+                <section id="page-insight" class="page-view">
+                    <div class="split-2">
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2>赛事结构</h2>
+                                    <p>跟进中、国家级、省级在全部收录中的占比。</p>
+                                </div>
+                            </div>
+                            <div class="rings-container">
+                                <div id="chart-ring-green" class="ring-chart"></div>
+                                <div id="chart-ring-blue" class="ring-chart"></div>
+                                <div id="chart-ring-orange" class="ring-chart"></div>
+                            </div>
+                        </article>
+                        <article class="panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h2>月度竞赛分布</h2>
+                                    <p>点击柱形，会带上月份筛选并打开比赛库。</p>
+                                </div>
+                            </div>
+                            <div id="chart-bar"></div>
+                        </article>
+                    </div>
+                    <article class="panel">
+                        <div class="panel-head">
+                            <div>
+                                <h2>类别分布</h2>
+                                <p>按竞赛类别统计收录数量，条形长度表示相对占比。</p>
+                            </div>
+                            <span class="section-badge section-badge--light" id="category-count">— 个类别</span>
+                        </div>
+                        <div id="category-bars" class="category-bars"></div>
+                    </article>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div id="global-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content detail-sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+            <button class="close-btn" id="modal-close" type="button" aria-label="关闭">
+                <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+            </button>
+            <div class="detail-cover" id="modal-cover">
+                <div class="detail-cover-inner">
+                    <p class="eyebrow" id="modal-kicker">赛事</p>
+                    <h2 id="modal-title">赛事名称</h2>
+                    <p id="modal-intro"></p>
+                    <div class="detail-chips" id="modal-chips"></div>
+                </div>
+            </div>
+            <div class="detail-body">
+                <div class="detail-glass">
+                    <h3>赛程</h3>
+                    <div id="modal-timeline" class="steps"></div>
+                    <p class="detail-hint">时间以主办方公告为准，报名前建议再核对一次官网。</p>
+                </div>
+                <div class="detail-glass">
+                    <h3>赛事信息</h3>
+                    <div id="modal-facts" class="facts"></div>
+                    <div class="detail-actions">
+                        <a id="modal-site" class="btn-ghost-light" target="_blank" rel="noopener">
+                            打开官网
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                        </a>
+                        <button id="modal-follow" class="btn-light" type="button">关注这场比赛</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="global-toast" class="toast" role="status" aria-live="polite">
+        <svg class="toast-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+        <span id="toast-text">已更新关注状态</span>
+    </div>
+
+    <script src="./js/app.js"></script>
+</body>
+</html>
